@@ -63,24 +63,7 @@
 {
     if(_imageView.image){
         CLImageEditor *editor = [[CLImageEditor alloc] initWithImage:_imageView.image delegate:self];
-        //CLImageEditor *editor = [[CLImageEditor alloc] initWithDelegate:self];
-        
-        /*
-        NSLog(@"%@", editor.toolInfo);
-        NSLog(@"%@", editor.toolInfo.toolTreeDescription);
-        
-        CLImageToolInfo *tool = [editor.toolInfo subToolInfoWithToolName:@"CLToneCurveTool" recursive:NO];
-        tool.available = NO;
-        
-        tool = [editor.toolInfo subToolInfoWithToolName:@"CLRotateTool" recursive:YES];
-        tool.available = NO;
-        
-        tool = [editor.toolInfo subToolInfoWithToolName:@"CLHueEffect" recursive:YES];
-        tool.available = NO;
-        */
-        
         [self presentViewController:editor animated:YES completion:nil];
-        //[editor showInViewController:self withImageView:_imageView];
     }
     else{
         [self pushedNewBtn];

@@ -775,24 +775,33 @@ static const CGFloat kMenuBarHeight = 80.0f;
 
 - (void)pushedFinishBtn:(id)sender
 {
-    if(self.targetImageView==nil){
-        if([self.delegate respondsToSelector:@selector(imageEditor:didFinishEditingWithImage:)]){
-            [self.delegate imageEditor:self didFinishEditingWithImage:_originalImage];
-        }
-        else if([self.delegate respondsToSelector:@selector(imageEditor:didFinishEdittingWithImage:)]){
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [self.delegate imageEditor:self didFinishEdittingWithImage:_originalImage];
-#pragma clang diagnostic pop
-        }
-        else{
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }
-    }
-    else{
-        _imageView.image = _originalImage;
-        [self restoreImageView:NO];
-    }
+    // @boraseoksoon : directly save and add edited image to local camera roll sending delegate as a finish signal.
+    UIImageWriteToSavedPhotosAlbum(_imageView.image, nil, nil, nil);
+    
+    UIAlertController * alert=[UIAlertController alertControllerWithTitle:@"Dayz"
+                                                                  message:@"Saved successfully"
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* okayButton = [UIAlertAction actionWithTitle:@"OK"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * action) {
+                                                          
+                                                          if([self.delegate respondsToSelector:@selector(imageEditor:didFinishEditingWithImage:)]){
+                                                              [self.delegate imageEditor:self didFinishEditingWithImage:_originalImage];
+                                                          }
+                                                          else if([self.delegate respondsToSelector:@selector(imageEditor:didFinishEdittingWithImage:)]){
+                                    #pragma clang diagnostic push
+                                    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+                                                              [self.delegate imageEditor:self didFinishEdittingWithImage:_originalImage];
+                                    #pragma clang diagnostic pop
+                                                          }
+                                                          else{
+                                                              [self dismissViewControllerAnimated:YES completion:nil];
+                                                          }
+    }];
+
+    [alert addAction:okayButton];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark- ScrollView delegate
